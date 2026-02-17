@@ -17,8 +17,8 @@ function [mat,optmax,optmin,aurocs,cis] = mwa2(tspx,tevents1,tevents2,winpos,win
 %
 % MANDATORY INPUT ARGUMENTS
 % tspx            vector of spike timestamps (in seconds)
-% tevents1        vector of timestamps for event 1(in seconds)
-% tevents2        vector of timestamps for event 2(in seconds)
+% tevents1        vector of timestamps for event 1 (in seconds)
+% tevents2        vector of timestamps for event 2 (in seconds)
 % winpos          vector specifying window positions from start to end [tstart:tshift:tend],
 %                 where tstart is starting time, tshift is the window displacement interval,
 %                 and tend is the position of the last window (all times in seconds)

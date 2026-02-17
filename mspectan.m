@@ -14,8 +14,13 @@ function [P1,f] = mspectan(signal,Fs,n,doplot)
 % Oct 2024    added input argument n
 % 
 % Maik C. Stuettgen, July 19, 2017
-%% the works
+%% input checks
+if nargin<4
+  error('Not enough input arguments provided.')
+end
 if ~isvector(signal),error('Only vector input accepted'),end
+
+%% the works
 L = length(signal);
 if n>floor(length(signal)/2),error(['It is not recommended that n>0.5*length(signal) L = ',num2str(L)]),end
 

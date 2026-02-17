@@ -1,5 +1,6 @@
 function [sdf,kernel] = msdf(psth,ftype,w,varargin)
-% [sdf,kernel] = msdf(psth,ftype,w,varargin)
+% function[sdf,kernel] = msdf(psth,ftype,w,varargin)
+% 
 % make spike density function
 % filters a psth generated from mpsth with a Gaussian or exponential kernel to yield an SDF
 % note: bin size of psth should be 1 ms!

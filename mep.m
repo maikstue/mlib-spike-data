@@ -1,5 +1,6 @@
 function [ep,errb,ci] = mep(fp,tevents,pre,post,varargin)
 % function [ep,errb,ci] = mep(fp,tevents,pre,post,varargin)
+% 
 % computes and plots an evoked = event-related potential from continuous LFP data
 % optionally returns tick-wise error bars (SEM) and confidence intervals
 % 

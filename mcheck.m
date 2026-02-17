@@ -86,7 +86,7 @@ function c = mcheck(waveforms,varargin)
 % of amplitude, they should yield the same recommendations; these assumptions are usually violated but they are at least
 % internally consistent
 crit_SNRd  = [6,4];            % SNR(dmax) = mean maximum value minus mean noise value divided by 1%-winsorized SD of noise
-                                  % so d measures SNR from noise to either maximum or minimum value; sum them up to get the whole range!
+                               % so d measures SNR from noise to either maximum or minimum value; sum them up to get the whole range!
 crit_SNRdf = [10,8];           % SNR_dmax - SNR_dmin
 crit_skew  = [0.5,0.75];
 crit_ISI   = [0.015,0.03];
@@ -515,8 +515,9 @@ set(gca,'XTickLabel',[],'YTickLabel',[])
 
 clear cutoff b n i x
 %% subplot 14 - spike count distribution over the course of the session
+subplot(4,5,14)
 if exist('spxtimes','var') && sum(spxtimes)>0
-  subplot(4,5,14),title('Spikes per minute'),hold on
+  title('Spikes per minute'),hold on
   n = histcounts(spxtimes,60:60:max([max(spxtimes) 1]));
   histogram(n,'FaceColor',[.5,.5,.5])
 
@@ -539,6 +540,10 @@ if fs
   % waveParms = [fwhmMax,fwhmMin,p2tAmp,p2tDur,p2tRat]
   c.waveParms = waveParms;
   clear waveParms
+else
+  subplot(4,5,15)
+  text(0,0.5,'Sampling rate not provided','FontName','Courier')
+  axis off
 end
 %% subplots 16&17 - PSTH and eliminated waveforms (if any)
 if exist('tevents','var')

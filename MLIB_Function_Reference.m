@@ -1,5 +1,4 @@
-%% FUNCTION REFERENCE MLIB
-% 
+%% MLIB FUNCTION REFERENCE
 % This document describes the use of the functions contained in MLIB. Additional information for each function is provided through each function's 
 % documentation. The functions are explained with reference to several example data files containing extracellular unit recordings from the brains of rats, 
 % mice, and pigeons, taken from the following publications:
@@ -16,6 +15,10 @@
 % Auditory cortex reflects goal-directed movement but is not necessary for behavioral adaptation in sound-cued reward tracking.
 % Journal of Neurophysiology 124: 1056.
 % 
+% van der Bourg A, Yang JW, Reyes-Puerta V, Laurenczy B, Wieckhorst M, Stüttgen MC, Luhmann HJ, Helmchen F (2017)
+% Layer-specific refinement of sensory coding in developing mouse barrel cortex.
+% Cerebral Cortex 27: 4835.
+% 
 % Vandevelde JR, Yang JW, Albrecht S, Lam H, Kaufmann P, Luhmann HJ, Stüttgen MC (2023)
 % Layer- and cell-type-specific differences in neural activity in mouse barrel cortex during a whisker detection task.
 % Cerebral Cortex 33: 1361.
@@ -24,59 +27,81 @@
 % Effects of optogenetic inhibition of a small fraction of parvalbumin-positive interneurons on the representation of sensory stimuli in mouse barrel cortex.
 % Scientific Reports 12: 19419.
 % 
+%% MLIB EXAMPLE FILES
 % There are several example files to illustrate the use of the MLIB functions for extracellular spike recordings.
- 
-% File 1: unitForMLIBTesting_1_rat.mat
-% This file contains a single structure 'spx' holding waveforms of a nice single unit as well as event markers (spx.cevents) and their respective 
-% time stamps (spx.tevents). Sampling rate (spx.fs) was 20 kHz. Recordings were made in the frontal cortex of a Long Evans rat performing a two-stimulus, 
-% two-response conditional discrimination task.  The task is described in Stoilova et al., 2020. During the first 120 trials, all correct responses were 
-% rewarded, and all incorrect responses were inconsequential. Time stamps are in seconds.
- 
-% File 2: unitForMLIBTesting_2_pigeon.mat
-% This file contains a single structure 'spx' holding 853 waveforms of a nice single unit (spx.adc, 32 ticks) and their time stamps (spx.tspx) as well as 
-% event markers (spx.cevents) and their time stamps (spx.tevents). The data is from a six-stimulus single-interval forced choice task as described in 
-% Lengersdorf et al., 2014. The sampling rate is 16.67 kHz. Time stamps are in seconds.
-% Codes in spx.cevents represent: 1: trial initiation, 2-7: six visual stimuli, 8: choice keys on, 9: food reward, 10: food omission, 11: punishment, 
-% 12-14: key pecks to the left, center, and right pecking keys, respectively.
-
-% File 3: unitForMLIBTesting_3_pigeon.mat
-% Similar to file 2 above, but containing two spike channels (spxCh9 and spxCh10) recorded in the same session. Both spike channels hold a vector of ALL 
-% detected waveforms on a given channel, i.e., spikes, noise, and artifacts.
-% spxCh9 marker 0 contains trash, marker 1 is a good single unit and marker 2 is a medium-quality single unit; 
-% spxCh10 marker 0 contains trash, markers 1 through 3 contain good SUs
-% spx.tevents and spx.cevents contain event time stamps and their code, respectively.
-% Codes represent: 97: initiation, 98-103: six visual stimuli, 104: choice keys on, 105: food, 106: food omission, 107: punishment, 
-% 108-110: key pecks to the left, center, and right pecking keys, respectively.
-
-% File 4: unitForMLIBTesting_4_rat.mat
-% Similar to file 1, but the unit is from rat auditory cortex.
-
-% File 5: unitData4mcluster.mat
-% This file contains data from Kasties et al. (2016). Neurons were recorded while animals viewed one out of five visual stimuli (each stimulus presentation 
-% lasted 5 seconds). For each neuron and stimulus, a PSTH was constructed, and the five PSTHs were concatenated before clustering (variable app_psths for 
-% 98 neurons). Each PSTH had 25 data points (firing rate in consecutive 0.2-second bins). The upshot of the exercise using this file is that units can be 
-% clustered according to their preferred stimulus.
-% The variable zpsths contains the (unit-wise) z-scored PSTHs.
-
-% File 6: data4mcsd.mat
-% This file serves to exemplify the use of mcsd.m for computing a current source density analysis. The only variable mean_FP contains LFP recordings 
-% from a linear silicon probe with 20 electrode sites spaced 50 microns apart. Sampling rate was 1000 Hz, only the first 80 ms following stimulus onset 
-% (deflection of the principal whisker) are included. Recordings were performed in mouse barrel cortex. This data was kindly provided by Dr. Jenq-Wei Yang
-% and Prof. Heiko Luhmann, University Medical Center Mainz, Germany.
-
-% File 7: data4mdimreduct.mat
-% This file serves to illustrate the use of mdimreduct.m to plot neural population trajectories (e.g., Saxena & Cunningham, Curr Opin Neurobiol 2019).
-% The matrices nspx_s1 and nspx_s2 each contain spike counts from the same 300 units, recorded in rat dorsomedial frontal cortex during a two-stimulus, 
-% two-choice task. Rows are units, columns are 17 100-ms time bins, shifted in steps of 50 ms, representing window positions from -400 ms to +400 ms 
-% relative to the onset of stimulus 1 (nspx_s1) or stimulus 2 (nspx_s2). Only correct responses were included in averages.
-
-% File 8: eeg_alpha.mat
-% This file is used to illustrate the use of mspectan.m to calculate and plot the fast Fourier transform. An EEG recording was performed over occipital 
-% cortex, the subject opened and closed his eyes every few seconds.
-% The vector y contains the EEG signal which was sampled at a frequency of 1000 Hertz (Fs).
- 
-%% Overview over MLIB functions in alphabetical order
-
+% 
+% File #1: unitForMLIBTesting_1_rat.mat
+% File #2: unitForMLIBTesting_2_pigeon.mat
+% File #3: unitForMLIBTesting_3_pigeon.mat
+% File #4: unitForMLIBTesting_4_rat.mat
+% File #5: unitForMLIBTesting_5_rat.mat
+% File #6: unitForMLIBTesting_6_rat.mat
+% File #7: data4mcluster.mat
+% File #8: data4mcsd.mat
+% File #9: data4mdimreduct.mat
+% File #10: data4mep.mat
+% File #11: data4mspectan.mat
+% 
+% The files' contents are described in detail in the accompanying documentation document.
+% 
+% NO.	FILE NAME	                  |  VARIABLES 	                    |  FUNCTION(S))	  | FIGURE PANEL(S) IN PAPER
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 1	  unitForMLIBTesting_1_rat	  |  spike times (tspx)             |  mnspx          |  none
+%                                 |  event codes (cevents)          |  mcvar          |
+%                                 |  event times (tevents)	        |                 |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 2	  unitForMLIBTesting_2_pigeon	|  spike times (tspx)             |  mcheck         |  Figure 2a-h
+%                                 |  event codes (cevents)          |  mpsth          |
+%                                 |  event times (tevents)          |  msdf           |
+%                                 |  spike waveforms (adc)          |  mwave          |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 3	  unitForMLIBTesting_3_pigeon	|  spike timestamps from two      |  mcc            |  Figure 2g-m
+%                                 |  different channels             |  mcheck         |
+%                                 |  tspx_ch9 & _ch10)              |                 |
+%                                 |  event codes (cevents)          |                 |
+%                                 |  event times (tevents)          |                 |
+%                                 |  waveforms from each channel    |                 |
+%                                 |  (adc_ch9 & _ch10)              |                 |
+%                                 |  cluster assignments for both   |                 |
+%                                 |  channels| waveforms            |                 |
+%                                 |  cluster_ch9 & _ch10)           |                 |
+%                                 |  waveform sampling rate (fs)	  |                 |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 4	  unitForMLIBTesting_4_rat	  |  spike times (tspx)             |  mlat           |  Figure 3a
+%                                 |  event codes (cevents)          |  mmi            |
+%                                 |  event times (tevents)          |  mwa            |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 5	  unitForMLIBTesting_5_rat	  |  spike times (tspx)             |  mwa2           |  none
+%                                 |  event codes (cevents)          |                 |
+%                                 |  event times (tevents)	        |                 |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 6	  unitForMLIBTesting_6_rat	  |  spike times (tspx)             |  mmultregress   |  Figure 3c
+%                                 |  stimulus times (tstims)        |                 |
+%                                 |  response times (tresponses)    |                 |
+%                                 |  outcome times (toutcomes)      |                 |
+%                                 |  stimulus type (stims)          |                 |
+%                                 |  response type (responses)      |                 |
+%                                 |  outcome type (outcomes)        |                 |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 7	  data4mcluster	              |  concatenated peri-stimulus     |  mcluster       |  none
+%                                 |  time histograms for            |                 |
+%                                 |  98 single neurons              |                 |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 8	  data4mcsd	                  |  average LFP responses from     |  mcsd           |  Figure 5
+%                                 |  20 electrode channels recorded |                 |
+%                                 |  over 80 ms                     |                 |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 9	  data4mdimreduct	            |  spike rates of 300 units       |  mdimreduct	    |  Figure 4
+%                                 |  relative to presentation of    |                 |
+%                                 |  either of two stimuli          |                 |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 10   data4mep	                  |  continuous field potential     |  mep            |  none
+%                                 |  trace from a single electrode  |                 |
+% --------------------------------|---------------------------------|-----------------|-------------------------
+% 11   data4mspectan	            |  continuous EEG recording       |  mspectan	      |  none
+%                                 |                                 |                 |
+% 
+%% MLIB FUNCTIONS IN ALPHABETICAL ORDER
 % FUNCTION        BRIEF DESCRIPTION
 % mcc             for spike data; visualizes and quantifies cluster isolation quality to aid spike sorting
 % mcheck          for spike data; visualizes and quantifies single unit isolation quality to aid spike sorting
@@ -100,8 +125,8 @@
 % mwa2            for spike data; similar to mwa, but computes AUROC for two events
 % mwave           for spike data; computes measures to characterize the average spike waveform of a single neuron
     
-%% Function mcc.m
-% [L_ratio,ID,A,J3,PsF,DBVI] = mcc(X,cid,whichclusters,ts,whichPCs,nocorrs)
+%% mcc.m
+% [L_ratio,ID,A,J3,PsF,DBVI] = mcc(waveforms,cid,whichclusters,ts,whichPCs,nocorrs)
 % function to assess the quality of spike sorting (post hoc)
 % computes standard quality measures (L_ratio, J3,...); see doc mcc for more information
 % This function requires the Statistics and Machine Learning Toolbox.
@@ -111,35 +136,32 @@
 %    use in extracellular recordings. Neuroscience, 131(1), 1–11.
 % 2) Nicolelis, M. A. L., Dimitrov, D., Carmena, J. M., Crist, R., Lehew, G., Kralik, J. D., & Wise, S. P. (2003). Chronic, multisite, 
 %    multielectrode recordings in macaque monkeys. PNAS 100(19), 11041–11046.
- 
+
+% first, clean up and load example data
 clear all,close all,clc
- 
 load unitForMLIBTesting_3_pigeon
- 
+
+% This file contains waveforms from two electrode channels. Let's first look at waveforms from channel 9.
+
 % an electrode with two clusters, take the first three principal components
-% field 'adc' contains the waveforms of both units, field 'markers' contains their cluster ID,
-% field 'tspx' contains spike time stamps
-[L_ratio,ID,A,J3,PsF,DBVI] = mcc(spxCh9.adc,spxCh9.markers,[1,2],spxCh9.tspx,1:3);
- 
-% take another electrode from which three clusters were isolated
-% use the first 8 PCs for computation of L_ratio etc., omit crosscorrelation figure
-[L_ratio,ID,A,J3,PsF,DBVI] = mcc(spxCh10.adc,spxCh10.markers(:,1),[1,2,3],spxCh10.tspx,1:8,'nocorrs');
- 
-% Figure 1 visualizes cluster separability
-% subplot(331) shows the different waveforms with clusters color-coded
-% subplot(332) shows the percentage of variance explained by principal components (after performing PCA on all waveforms)
-% subplot(333) shows PC1 for all spikes (clusters color-coded) as a function of recording time
-% subplots 4, 5, 6 show spikes in principal component space; bold lines show each cluster's mean and 2 standard deviations in 2D PC space
-% subplot(337) shows the differences of all spikes' Mahalanobis distances from the two cluster means; the less overlap, the better
-% subplot(338) shows a receiver operating characteristic (ROC) curve. The measure A' gives the probability to correctly categorize two random samples taken from each distribution
-% subplot(339) presents some commonly used cluster separation quality indices
-% 
-% Figure 2 shows autocorrelograms (AC) and crosscorrelograms (CC) of the different units ACs of clean single units have very 
-% few or no spikes during the first few milliseconds after each spike (refractory period).
+% 'adc' contains all waveforms detected on the respective electrode channel
+% 'clusters' contains the results of spike sorting - trash (cluster 0) or putative spike waveforms
+
+whichclusters = [1,2];    % we will look at clusters 1 and 2 (and ignore 0)
+whichPCs = 1:3;           % we will use the first three principal components for calculation of quality indices
+
+% Example 1
+% run the code; for explanation of the two figures and the subplots, refer to the MLIB documentation
+[L_ratio,ID,A,J3,PsF,DBVI] = mcc(adc_ch9,clusters_ch9,whichclusters,tspx_ch9,whichPCs);
+
+% Example 2
+% now let's have a look at the waveforms from channel 10; here, three putative spike clusters were isolated
+whichclusters = [1,2,3];
+[L_ratio,ID,A,J3,PsF,DBVI] = mcc(adc_ch10,clusters_ch10,whichclusters,tspx_ch10,whichPCs,'nocorrs');    % with 'nocorrs', we omit the second figure showing crosscorrelograms
  
 return
  
-%% Function mcheck.m
+%% mcheck.m
 % c = mcheck(waveforms,varargin)
 % function for assessing spike sorting quality
 % returns a range of quality matrices, see doc mcheck for explanation
@@ -156,29 +178,32 @@ clear all,close all,clc
 load unitForMLIBTesting_2_pigeon.mat
 
 % input all waveforms (sorted spikes and noise)
-c = mcheck(spx.adc);
+c = mcheck(adc);
 
 % input waveforms and waveform timestamps
-c = mcheck(spx.adc,'timevec',spx.tspx);
+c = mcheck(adc,'timevec',tspx);
 
 % all of the above, plus event timestamps
-c = mcheck(spx.adc,'timevec',spx.tspx,'tevents',spx.tevents(spx.cevents==13));
+c = mcheck(adc,'timevec',tspx,'tevents',tevents(cevents==13));
 
 % now try the other file
 clear all
 load unitForMLIBTesting_3_pigeon.mat
 
 % input all waveforms from channel 9; the result looks messy
-c = mcheck(spxCh9.adc);
+c = mcheck(adc_ch9);
 
 % now input only waveforms which have been classfied into cluster 1 during spike sorting
-c = mcheck(spxCh9.adc,'markvec',spxCh9.markers,'target',1);
+c = mcheck(adc_ch9,'markvec',clusters_ch9,'target',1);
 
 % as above, but additionally provide spike timestamps
-c = mcheck(spxCh9.adc,'markvec',spxCh9.markers,'target',1,'timevec',spxCh9.tspx);
+c = mcheck(adc_ch9,'markvec',clusters_ch9,'target',1,'timevec',tspx_ch9);
 
 % as above, but also provide timestamps for a PSTH (relative to pecks on the center key) and sampling rate
-c = mcheck(spxCh9.adc,'markvec',spxCh9.markers,'target',1,'timevec',spxCh9.tspx,'tevents',tevents(cevents==109),'fs',10^6/spxCh9.sampleinterval);
+c = mcheck(adc_ch9,'markvec',clusters_ch9,'target',1,'timevec',tspx_ch9,'tevents',tevents(cevents==109),'fs',fs);
+
+% same, but for cluster 2
+c = mcheck(adc_ch9,'markvec',clusters_ch9,'target',2,'timevec',tspx_ch9,'tevents',tevents(cevents==109),'fs',fs);
 
 % Note that some subplots are only shown when the appropriate inputs to the function are provided.
 % subplot(451)    shows up to 5,000 waveforms superimposed; ordinate plot ADC units (usually, mV or µV)
@@ -253,7 +278,7 @@ c = mcheck(spxCh9.adc,'markvec',spxCh9.markers,'target',1,'timevec',spxCh9.tspx,
 
 return
 
-%% Function mcluster.m
+%% mcluster.m
 % [cid,avsil] = mcluster(data,z,nclus,whichPCs,cType,whichDist,metric,T,plotting)
 % performs clustering on a data matrix after running PCA and returns cluster codes cid and average silhouette values
 % input 'data' is a matrix where rows are units and columns are binned firing rates or eta2/omega2 values
@@ -261,11 +286,28 @@ return
 % 
 % Recommended reading:
 % Kasties, N., Starosta, S., Güntürkün, O., & Stüttgen, M. C. (2016). Neurons in the pigeon caudolateral nidopallium differentiate 
-% Pavlovian conditioned stimuli but not their associated reward value in a sign-tracking paradigm. Scientific Reports, 6(October), 35469.
+% Pavlovian conditioned stimuli but not their associated reward value in a sign-tracking paradigm. Scientific Reports, 6 (October), 35469.
 
 clear all,close all,clc
 
-load('unitData4mcluster.mat')
+load('data4mcluster.mat')
+
+% The data file contains PSTHs for 98 units; for each unit, we have five PSTHs with 25 data points each. These five PSTHs were appended for clustering.
+% First, let us have a look a random selection of 5 units; for each unit, we have 5 PSTHs.
+exampleUnits = sort(randsample(1:98,5,'false'));      % randomly select five units
+xticks = 0.1:0.2:4.9;   % sampling times (0.2 s per sample)
+figure('name','Some PSTHs')
+for i = 1:5
+  for j = 1:5
+    subplot(5,5,(i-1)*5+j),title(['Unit ',num2str(exampleUnits(i)),', stim ',num2str(j)]),hold on
+    plot(xticks,zpsths(exampleUnits(i),(j-1)*25+1:25*j))
+    if i==5 && j==1,xlabel('Time (s)'),ylabel('z(spikes per s)'),end
+    ylim([-2,3.5])
+  end
+end
+
+% It is apparent that the units respond differently to the five stims (in fact, many units prefer one of the stimuli).
+% Let's see whether we can cluster the 5 units into groups, depending on their responses to ALL five stimuli.
 
 nclus = 5;              % choose into how many clusters the data should be partitioned
 whichPCs = 1:3;         % mcluster will only use these PCs for clustering
@@ -279,7 +321,7 @@ metric = 'correlation'; % distance metric
 % now plot the z-scored PSTHs for each cluster
 figure('units','normalized','Position',[.4,.55,.5,.2])
 for i = 1:nclus
-  subplot(1,nclus,i),hold on
+  subplot(1,nclus,i),title(['Cluster ',num2str(i)]),hold on
   for j = 1:5
     plot(0.1:0.2:4.9,mean(zpsths(cid==i,(j-1)*25+1:j*25)))
   end
@@ -288,9 +330,12 @@ for i = 1:nclus
 end
 legend('Stim 1','Stim 2','Stim 3','Stim 4','Stim 5','units','normalized','Position',[0.45,0,1,1])
 
+% With 5 clusters, one can see that in four of the clusters, units prefer one of the five stimuli (color-coded) in their steady-state activity.
+% In one of the clusters, units fire briefly upon stimulus onset.
+
 return
 
-%% Function mcsd.m
+%% mcsd.m
 % [csd_r,csd_i,lfp_s] = mcsd(lfpmat,es,doplot,t,theMinus)
 % performs a current source density analysis for laminar LFP recordings
 % 
@@ -318,7 +363,7 @@ doplot = 1;                   % plot the data (1) or not (0)
 time_vec = -8:71;             % in ms
 theMinus = 1;                 % multiply the 2nd spatial derivative with -1 or not (1/0, resp.); default 1
 
-[csd_r,csd_i,lfp_s] = mcsd(mean_FP,electrode_spacing,doplot,time_vec,theMinus);
+[csd_r,csd_i,lfp_s] = mcsd(mean_fp,electrode_spacing,doplot,time_vec,theMinus);
 
 % subplot(221) shows the raw LFP traces, color-coded for depth from black (top) to white (bottom)
 % subplot(222) shows the LFP traces both as black lines and color-coded (after smoothing)
@@ -330,7 +375,7 @@ set(gcf,'units','normalized','Position',[.2,.2,.6,.6])
 
 return
 
-%% Function mcvar.m
+%% mcvar.m
 % cv = mcvar(x,mode)
 % computes the coefficient of variation for interspike intervals and the Fano Factor for a spike count distribution
 % 
@@ -341,14 +386,14 @@ clear all,close all,clc
 
 load('unitForMLIBTesting_1_rat.mat')
 
-cv_isi = mcvar(spx.tspx,'diff')    % field tspx holds spike times in seconds relative to the beginning of the recording
+cv_isi = mcvar(tspx,'diff')    % field tspx holds spike times in seconds relative to the beginning of the recording
 
-spike_counts = histcounts(spx.tspx,0:999); % get spike counts for consecutive 1-s bins over the first 1000 seconds of recording
-cv_ff = mcvar(spx.tspx,'abs')
+spike_counts = histcounts(tspx,0:999); % get spike counts for consecutive 1-s bins over the first 1000 seconds of recording
+cv_ff = mcvar(tspx,'abs')
 
 return
 
-%% Function mdimreduct.m
+%% mdimreduct.m
 % [score,loadings] = mdimreduct(smat4dimred,standardize,plotresults);
 % performs PCA-based dimensionality reduction of a sample of neurons recorded simultaneously or under identical conditions
 % This function requires the Statistics and Machine Learning Toolbox.
@@ -439,7 +484,7 @@ end
 
 return
 
-%% Function mep.m
+%% mep.m
 % function [ep,errb,ci] = mep(fp,tevents,pre,post,varargin)
 % computes and plots an evoked = event-related potential from continuous LFP data
 % optionally returns tick-wise error bars (SEM) and confidence intervals
@@ -473,7 +518,7 @@ plot([-pre_ticks,post_ticks],[ci(2),ci(2)],'k:')    % upper bound
 
 return
 
-%% Function mlat.m
+%% mlat.m
 % [mean1stspike,median1stspike,peaklat,meantspike,mediantspike] = mlat(tspx,tstims,texclude)
 % provides various measures of response latency:
 % - mean first-spike latency
@@ -490,8 +535,7 @@ clear all,close all,clc
 
 load('unitForMLIBTesting_4_rat.mat')
 
-tspx = spx.tspx;                          % get spike times
-tstims = spx.tevents(spx.cevents==1);     % get stimulus times (80-dB noise burst played via a loudspeaker)
+tstims = tevents(cevents==1);     % get stimulus times (80-dB noise burst played via a loudspeaker)
 texclude = 0.05;                          % take only spikes from the first 0.05 seconds
 
 % get measures
@@ -513,7 +557,7 @@ legend('','','Mean 1st','Median 1st','Peak lat','Mean t','Median t','Location','
 
 return
 
-%% Function mmi.m
+%% mmi.m
 % [MI,cMI1995,cMI1996] = mmi(s1,s2)
 % computes mutual information (MI) between two spike count distributions
 % cMI is corrected MI, uses correction formulas from two different Panzeri papers
@@ -528,8 +572,8 @@ clear all,close all,clc
 
 load('unitForMLIBTesting_4_rat.mat')
 
-s1 = mnspx(spx.tspx,spx.tevents(spx.cevents==201),300,0,1); % get vector of spike counts for the last 300 ms before event 201
-s2 = mnspx(spx.tspx,spx.tevents(spx.cevents==202),300,0,1); % get vector of spike counts for the last 300 ms before event 202
+s1 = mnspx(tspx,tevents(cevents==201),300,0,1); % get vector of spike counts for the last 300 ms before event 201
+s2 = mnspx(tspx,tevents(cevents==202),300,0,1); % get vector of spike counts for the last 300 ms before event 202
 
 [MI,cMI1995,cMI1996] = mmi(s1,s2)   % returns MI uncorrected and corrected
 
@@ -538,7 +582,7 @@ auroc = mroc(s1,s2);
 
 return
 
-%% Function mmi_psych.m
+%% mmi_psych.m
 % function [MI,d] = mmi_psych(S1R1,S1R2,S2R1,S2R2)
 % computes mutual information (MI) and sensitivity (d') for behavioral data in a two-stimulus (or two-category), two-choice task
 % MI allows to bring psychometric and neurometric discrimination performance to the same scale
@@ -572,7 +616,7 @@ text(0.2,0.5,['r=',num2str(r,'%2.2f')])
 
 return
 
-%% Function mmultregress.m
+%% mmultregress.m
 % [b,p,sr,psr] = mmultregress(tspx,tevents,predictors,winpos,winsize,varargin)
 % Performs multiple regression analysis on spike counts with moving windows of specified durations and at multiple positions relative to an event.
 % If interactions between predictors are to be included, they should be specified within the predictors input matrix.
@@ -597,7 +641,7 @@ predictors = [pred_stims,pred_resps,pred_outs];
 winpos  = -0.4:0.025:0.8;
 winsize = [0.025,0.1,0.25];
 
-[b,p,sr,psr] = mmultregress(spx.tspx,tstims,predictors,winpos,winsize,'plotit','prednames',{'stimulus','response','reward'},'normalize');
+[b,p,sr,psr] = mmultregress(tspx,tstims,predictors,winpos,winsize,'plotit','prednames',{'stimulus','response','reward'},'normalize');
 
 % The two panels on the left show results for a winsize of 0.1 s, the two plots on the right for a winsize of 0.2 s.
 % The top panels show regression (b) coefficients as functions of window position.
@@ -610,20 +654,20 @@ winsize = [0.025,0.1,0.25];
 
 return
 
-%% Function mnspx.m
+%% mnspx.m
 % nspx = mnspx(spxtimes,trigtimes,pre,post,removenans)
 % counts the number of spikes in a specified time window relative to a specific event
 % the output argument (nspx) can e.g. be used as one of two inputs to mroc.m or mmi.m or ttest2
 % 
 % Recommended reading:
-% Counting spikes is done in nearly every paper which reports spike recordings
+% Counting spikes is done in nearly every paper which reports spike recordings.
 
 clear all,close all,clc
 
 load unitForMLIBTesting_1_rat.mat
 
 % get the distribution of spike counts relative to the start of event 1 (stimulus 1) and the following 100 ms
-nspx = mnspx(spx.tspx,spx.tevents(spx.cevents==1),0,100);
+nspx = mnspx(tspx,tevents(cevents==1),0,100);
 
 % plot the distribution
 histogram(nspx,-0.5:1:max(nspx)+1)
@@ -631,7 +675,7 @@ xlabel('N Spikes'),ylabel('Frequency')
 
 return
 
-%% Function mpsth.m
+%% mpsth.m
 % [psth,trialspx] = mpsth(spxtimes,trigtimes,varargin)
 % constructs a per-stimulus time histogram
 % optional plotting of PSTH and raster display
@@ -646,21 +690,21 @@ clear all,close all,clc
 load unitForMLIBTesting_2_pigeon
 
 % return psth and trialspx
-[psth,trialspx] = mpsth(spx.tspx,spx.tevents(spx.cevents==1));
+[psth,trialspx] = mpsth(tspx,tevents(cevents==1));
 plot(psth(:,1),psth(:,2))
 
 % again, but directly plot PSTH and raster
-mpsth(spx.tspx,spx.tevents(spx.cevents==1),'chart',2);
+mpsth(tspx,tevents(cevents==1),'chart',2);
 
 % same, but scale in units of firing rate
-mpsth(spx.tspx,spx.tevents(spx.cevents==1),'chart',2,'fr',1);
+mpsth(tspx,tevents(cevents==1),'chart',2,'fr',1);
 
 % same, but with another bins 10 ms wide with a different time range
-mpsth(spx.tspx,spx.tevents(spx.cevents==1),'chart',2,'fr',1,'binsz',10,'pre',500,'post',500);
+mpsth(tspx,tevents(cevents==1),'chart',2,'fr',1,'binsz',10,'pre',500,'post',500);
 
 return
 
-%% Function mroc.m
+%% mroc.m
 % [auroc,ciLoUp] = mroc(x,y,varargin)
 % computes the area under the ROC curve (non-parametrically) for two samples, e.g. spike count distributions
 % note that mroc.m works faithfully only with vectors containing exclusively integers
@@ -675,8 +719,8 @@ return
 clear all,close all,clc
 
 % first generate two vectors with each element being a spike count
-spx1 = poissrnd(4,20,1);
-spx2 = poissrnd(6,20,1);
+spx1 = poissrnd(3,25,1);
+spx2 = poissrnd(7,25,1);
 
 % compute area under the ROC curve
 auroc = mroc(spx2,spx1);
@@ -689,7 +733,7 @@ nboot = 1000;
 
 return
 
-%% Function msdf.m
+%% msdf.m
 % [sdf,kernel] = msdf(psth,ftype,w,varargin)
 % convert PSTH to spike-density function; PSTH should be in units of spikes/sec
 % see script msdf_test.m for more examples
@@ -704,7 +748,7 @@ clear all,close all,clc
 load unitForMLIBTesting_2_pigeon
 
 % first generate a PSTH with mpsth; scale in units of firing rate
-psth = mpsth(spx.tspx,spx.tevents(spx.cevents==1),'fr',1);
+psth = mpsth(tspx,tevents(cevents==1),'fr',1);
 
 % run msdf, convolve PSTH with a Gaussian kernel with a standard deviation of 50 ms
 ftype = 'Gauss';
@@ -727,7 +771,7 @@ xlabel('Time (ms)'),ylabel('Spikes per s')
 
 return
 
-%% Function mspectan.m
+%% mspectan.m
 % [P1,f] = mspectan(signal,Fs,n,doplot)
 % computes and plots the fast fourier transform of a signal with sampling rate Fs
 % This function requires the Curve Fitting Toolbox.
@@ -743,37 +787,37 @@ return
 
 clear all,close all,clc
 
-load eeg_alpha
+load data4mspectan
 
 % first, plot the raw data and the spectrogram
 % increases in signal amplitude correspond to alpha wave when the subject closed his eyes
 figure('name','Raw signal','units','normalized','position',[.2,.2,.4,.4])
 
 subplot(211)
-t = 1/Fs:1/Fs:(length(y)/Fs);   % time vector (seconds)
-plot(t/60,y)
+t = 1/fs:1/fs:(length(eeg)/fs);   % time vector (seconds)
+plot(t/60,eeg)
 ylabel('Voltage (A.U.)')
 
 subplot(212)
-spectrogram(y,500,450,2^12,Fs,'yaxis'); % [s,f,t] = spectrogram(x,window,noverlap,nfft,fs) 
+spectrogram(eeg,500,450,2^12,fs,'yaxis'); % [s,f,t] = spectrogram(x,window,noverlap,nfft,fs) 
 axis tight
 ylim([0,100])
 set(gca,'CLim',[-80,-40])
 
 % second, compute and plot the amplitude spectrum
 n = 2^12;      % for this signal, 2^12 is nice, but the maximum is 0.5*length(y)
-[P1,f] = mspectan(y,Fs,n,1);
+[P1,f] = mspectan(eeg,fs,n,1);
 
 return
 
-%% Function mtune.m
+%% mtune.m
 % [avFR,semFR,fitobject] = mtune(tspx,tevents,cevents,tpost)
 % computes a tuning curve of a spike response to several stimuli and fits it with a normal curve
 % 
 % Recommended reading:
 % Henry, G. H., Dreher, B., Bishop, P. O. (1974). Orientation specificity of cells in cat striate cortex. Journal of Neurophysiology, 37(6), 1394–1409.
 
-% First, we simulate a series of spikes with a fixed rate of 5 Hertz.
+% First, we simulate a series of spikes with a fixed (baseline) firing rate of 5 Hertz.
 % We have 7 different stimuli which increase the firing rate of the neuron to different degrees.
 % Each stimulus lasts for 1 s and is presented 25 times. The inter-stimulus interval is 4 s.
 
@@ -807,14 +851,27 @@ for i = 1:ntrials
 end
 tspx = sort(tspx);
 
-% construct and plot tuning curve
+% take a look at the simulated neurons' peri-stimulus time histogram using the MLIB function mpsth
+figure('units','normalized','position',[.2,.1,.2,.8])
+for i = 1:nstims
+  psth = mpsth(tspx,tevents(cevents==i),'pre',500,'post',1500,'binsz',100);
+  subplot(nstims,1,i),title(['Stimulus no. ',num2str(i)]),hold on
+  bar(psth(:,1)+50,psth(:,2),'k')
+  plot([0,0],[0,1000],'k:')
+  plot([1000*stimdur,1000*stimdur],[0,1000],'k:')
+  ylim([0,blfr*max(frinc)])
+end
+xlabel('Time re: stimulus onset (ms)')
+ylabel('Spike count')
+
+% now construct and plot tuning curve
 % note that a Gaussian fit to the tuning curve is produced and plotted only if the Curve Fitting Toolbox is available
 mtune(tspx,tevents,cevents,stimdur*1000);
 
 return
 
-%% Function mvecstrength.m
-% [vs,pvs] = mvecstrength(tspx,T) 
+%% mvecstrength.m
+% [vs,pvs] = mvecstrength(cycle_tspx,T) 
 % computes the vector strength of a spike response to a periodic signal basis for computation is the cycle time histogram, i.e., 
 % a PSTH relative to the onset of a sine-wave cycle which lasts until its end
 % 
@@ -828,29 +885,61 @@ clear all,close all,clc
 nspikes   = 100;                % number of spikes fired by the unit
 frequency = 10;                 % frequency of sine wave in Hertz
 T         = 1000/frequency;     % period length of sine wave in ms
-SD        = 20;                 % the smaller the SD of the Gaussian, the higher the vector strength
+SD        = 10;                  % standard deviation of the Gaussian kernel; the larger SD, the higher the vector strength
 
-tspikes = normrnd(50,SD,nspikes,1);     % generate spike times from Gaussian distribution
-tspikes(tspikes<0 | tspikes>T) = [];    % keep only spikes within a single cycle
+cycle_tspx = normrnd(T/2,SD,nspikes,1);          % generate spike times from Gaussian distribution
+                                                 % this synthetic unit will fire around the peak of the sine wave
+cycle_tspx(cycle_tspx<0 | cycle_tspx>T) = [];    % keep only spikes within a single cycle
 
-cth = histcounts(tspikes,0:100);        % construct cycle time histogram for plotting
+cth = histcounts(cycle_tspx,0:T);                % construct cycle time histogram for plotting
 
-[vs,pvs] = mvecstrength(tspikes,T)      % calculate vector strength and its p-value
+[vs,pvs] = mvecstrength(cycle_tspx,T)            % calculate vector strength and its p-value
 
-figure
-subplot(211),title(['VS=',num2str(vs,'%2.2f'),', p=',num2str(pvs,'%2.3f')]),hold on,bar(0.5:99.5,cth)
+figure('units','normalized','position',[.3,.1,.4,.8])
+% first plot the simulated spike train relative to the sine wave stimulus
+subplot(411),title(['Simulated spike train for continuous stimulation, SD=',num2str(SD)]),hold on
+ncycles = ceil(2*nspikes/frequency);      % just for illustration purposes
+c = 1;
+for i = 1:ncycles
+  nspxthiscycle = randi(3);
+  plot((i-1)*T+cycle_tspx(c:c+nspxthiscycle-1),0.1,'k.')
+  c = c+nspxthiscycle;
+end
+plot(linspace(0,T*ncycles,500),0.2*(sin(linspace(-0.5*pi,(ncycles-1)*2*pi+1.5*pi,500))+1),'Color',ones(1,3)*0.7)
+ylim([-0.1,0.6])
+axis off
+
+% plot the cycle time histogram
+% add the sine wave cycle for illustration purposes
+subplot(412),title(['VS=',num2str(vs,'%2.2f'),', p=',num2str(pvs,'%2.3f')]),hold on
+bar(0.5:T-0.5,cth)
+plot(linspace(0,T,100),0.5*max(cth).*(sin(linspace(-0.5*pi,1.5*pi,100))+1),'Color',ones(1,3)*0.7)
+xlabel('Time (ms) within cycle'),ylabel('Spike count')
 
 % now do the same with randomly distributed spike times
-tspikes = rand(nspikes,1)*T;
-cth = histcounts(tspikes,0:100);    % cycle time histogram
-[vs,pvs] = mvecstrength(tspikes,T)
+cycle_tspx = rand(nspikes,1)*T;
+cth = histcounts(cycle_tspx,0:T);    % cycle time histogram
+[vs,pvs] = mvecstrength(cycle_tspx,T)
 
-subplot(212),title(['VS=',num2str(vs,'%2.2f'),', p=',num2str(pvs,'%2.3f')]),hold on,bar(0.5:99.5,cth)
-xlabel('Time (ms)'),ylabel('Spike count')
+subplot(413),title(['Simulated spike train for continuous stimulation, random spike times']),hold on
+c = 1;
+for i = 1:ncycles
+  nspxthiscycle = randi(3);
+  plot((i-1)*T+cycle_tspx(c:c+nspxthiscycle-1),0.1,'k.')
+  c = c+nspxthiscycle;
+end
+plot(linspace(0,T*ncycles,500),0.2*(sin(linspace(-0.5*pi,(ncycles-1)*2*pi+1.5*pi,500))+1),'Color',ones(1,3)*0.7)
+ylim([-0.1,0.6])
+axis off
+
+subplot(414),title(['VS=',num2str(vs,'%2.2f'),', p=',num2str(pvs,'%2.3f')]),hold on
+bar(0.5:T-0.5,cth)
+plot(linspace(0,T,100),0.5*max(cth).*(sin(linspace(-0.5*pi,1.5*pi,100))+1),'Color',ones(1,3)*0.7)
+xlabel('Time (ms) within cycle'),ylabel('Spike count')
 
 return
 
-%% Function mwa.m
+%% mwa.m
 % [mat,optmax,optmin,aurocs,cis] = mwa(tspx,tevents,trefevents,winpos,winsize,varargin)
 % computes the area under the ROC curve for spike count distributions for a range of analysis window durations and window positions
 % 
@@ -866,14 +955,14 @@ load unitForMLIBTesting_4_rat.mat
 window_positions = -0.1:0.01:0.2;     % analysis window positions in seconds relative to the event - we shift analysis windows by 10 ms
 window_sizes     = [0.005,0.01,0.02,0.03,0.05:0.025:0.1];     % analysis window durations in seconds, ranging from 5 to 100 ms
 
-tevents    = spx.tevents(spx.cevents==1);
-trefevents = spx.tevents(spx.cevents==1)-0.5;   % our reference events are simply half a second before each event
+tstim1     = tevents(cevents==1);       % get timestamps of stimulus 1
+trefevents = tstim1-0.5;                % our reference events are simply half a second before each stimulus 1 onset
 
-[mat,optmax,optmin,aurocs,cis] = mwa(spx.tspx,tevents,trefevents,...
+[mat,optmax,optmin,aurocs,cis] = mwa(tspx,tstim1,trefevents,...
                              window_positions,window_sizes,'plotit',1,'ci',[95,500],'smoothit',1);    % smoothing affects optmax and optmin!
 return
 
-%% Function mwa2.m
+%% mwa2.m
 % [mat,optmax,optmin,aurocs,cis] = mwa2(tspx,tevents,tevents2,winpos,winsize,varargin)
 % similar to mwa.m, but computes the area under the ROC curve for two different conditions (e.g., stimuli) while in
 % mwa.m there is only one reference distribution and the signal distribution shifts, in mwa2.m both distributions shift
@@ -889,12 +978,12 @@ clear all,close all,clc
 
 load unitForMLIBTesting_5_rat.mat
 
-tS1 = spx.tevents(spx.cevents==1);
-tS2 = spx.tevents(spx.cevents==2);
+tS1 = tevents(cevents==1);
+tS2 = tevents(cevents==2);
 
 % first visualize the responses of this unit to the two different stimuli
-psth1 = mpsth(spx.tspx,tS1,'fr',1,'binsz',10,'pre',500,'post',500);
-psth2 = mpsth(spx.tspx,tS2,'fr',1,'binsz',10,'pre',500,'post',500);
+psth1 = mpsth(tspx,tS1,'fr',1,'binsz',10,'pre',500,'post',500);
+psth2 = mpsth(tspx,tS2,'fr',1,'binsz',10,'pre',500,'post',500);
 figure
 bar(psth1(:,1),psth1(:,2),'FaceAlpha',0.5,'EdgeAlpha',0,'BarWidth',1),hold on
 bar(psth2(:,1),psth2(:,2),'FaceAlpha',0.5,'EdgeAlpha',0,'BarWidth',1)
@@ -904,15 +993,15 @@ legend('S1','S2')
 % now, use mwa2.m to compare the responses window by window
 winpos  = -0.2:0.01:0.4;
 winsize = [0.005,0.01,0.02,0.05,0.075,0.1,0.15,0.2];
-[mat,optmax,optmin,aurocs,cis] = mwa2(spx.tspx,tS2,tS1,winpos,winsize,'plotit',2);
+[mat,optmax,optmin,aurocs,cis] = mwa2(tspx,tS2,tS1,winpos,winsize,'plotit',2);
 
 % mwa2 will return an 8-by-61 matrix with 488 AUROC values, computed from -0.2 to +0.4 seconds relative to the specified events, 
 % with window sizes ranging from 5 ms to 200 ms, and generates a fancy plot on top
 
 return
 
-%% Function mwave.m
-% waveParms = mwave(meanwave,si,varargin)
+%% mwave.m
+% waveparms = mwave(meanwave,si,varargin)
 % function computes the a range of waveform indices, such as the widths of the first and second response peaks of 
 % a spike waveform (full width at half maximum), the trough-to-peak ratio and its duration etc.
 % 
@@ -927,9 +1016,14 @@ clear all,close all,clc
 
 load('unitForMLIBTesting_2_pigeon.mat')
 
-Fs   = 2*10^4;      % sampling frequency in Hertz
-tick = 10^6/Fs;     % use Fs to compute the interval between consecutive samples (in microseconds)
+fs   = 2*10^4;      % sampling frequency in Hertz, not provided in the file
 
-waveParms = mwave(mean(spx.adc'),tick,'plot');
+waveparms = mwave(mean(adc),fs,'plot');
+
+% waveparms are (in this order):
+% - full width at half maximum of the positive (1) and the negative (2) waveform peaks, both in microseconds
+% - peak-to-trough amplitude (3)
+% - peak-to-rough duration (4) in microseconds
+% - peak-to-trough ratio (positive peak divided over negative peak, absolute magnitudes) (5)
 
 return

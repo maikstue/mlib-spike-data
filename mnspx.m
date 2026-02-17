@@ -1,5 +1,6 @@
 function nspx = mnspx(spxtimes,trigtimes,pre,post,removenans)
 % nspx = mnspx(spxtimes,trigtimes,pre,post,removenans)
+% 
 % function simply returns the distribution of spike counts within a specific interval relative to a trigger
 % IMPORTANT: all timestamp inputs (spxtimes, trigtimes) must be seconds and will be converted to ms in the script!
 %

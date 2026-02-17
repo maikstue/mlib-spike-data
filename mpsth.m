@@ -1,5 +1,6 @@
 function [psth,trialspx] = mpsth(spxtimes,trigtimes,varargin)
 % [psth,trialspx] = mpsth(spxtimes,trigtimes,varargin)
+% 
 % function generates a peri-stimulus time histogram (psth) with time base in column 1 and histogram in column 2
 % in addition, function returns spike timestamps relative to trigger times
 % IMPORTANT: all timestamp inputs (spxtimes, trigtimes) must be seconds and will be converted to ms in the script!

@@ -1,11 +1,11 @@
 function [avFR,semFR,fitobject] = mtune(tspx,tevents,cevents,tpost)
 % function [avFR,semFR,fitobject] = mtune(tspx,tevents,cevents,tpost)
-% constructs and fits a tuning curve
+% constructs and fits a (Gaussian) tuning curve
 % 
 % INPUTS
 % tspx        spike time stamps (in seconds)
 % tevents     event time stamps (in seconds)
-% cevents     event codes (integers)
+% cevents     event codes (integers) - these should identify different stimuli
 % tpost       time post event onset to analyze (in ms)
 % 
 % OUTPUTS
@@ -15,6 +15,8 @@ function [avFR,semFR,fitobject] = mtune(tspx,tevents,cevents,tpost)
 % 
 % Maik C. Stüttgen, November 2024
 %% the works
+if numel(cevents)~=numel(tevents),error('Input vectors tevens and cevents should have the same size.'),end
+
 stimIDs = unique(cevents);
 
 for i = 1:numel(stimIDs)

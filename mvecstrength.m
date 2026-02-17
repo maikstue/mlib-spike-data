@@ -1,5 +1,5 @@
-function [vs,pvs] = mvecstrength(tspx,T)
-% function [vs,pvs] = mvecstrength(tspx,T)
+function [vs,pvs] = mvecstrength(cycle_tspx,T)
+% function [vs,pvs] = mvecstrength(cycle_tspx,T)
 % 
 % This function computes the so-called vector strength and performs a significance test on it.
 % The measure was introduced first by Goldberg and Brown (1969, J Neurophysiol).
@@ -18,31 +18,33 @@ function [vs,pvs] = mvecstrength(tspx,T)
 % Also see  https://www.cns.nyu.edu/~bijan/courses/sm10/Lectures/semple/NS2_07_Audition2.pdf.
 % 
 % INPUT
-% tspx  a vector of spike timestamps relative to cycle onset in ms
-% T     period length of the sine wave in ms
+% cycle_tspx  a vector of spike timestamps relative to cycle onset in ms
+% T           period length of the sine wave in ms
 % 
 % OUTPUT
 % vs    vector strength, a number between 0 and 1
 % pvs   the p-value from the Rayleigh test
 % 
 % HISTORY
+% 2025 June     renamed input 'tspx' to 'cycle_tspx'
+% 
 % one could add optional bootstrapping the p-value for small sample sizes, see book by Grün & Rotter
 % 
 % October 2021
 % Maik C. Stüttgen, University Medical Center Mainz
 %% sanity checks
-if any(tspx>T)
+if any(cycle_tspx>T)
   disp('Some spike times exceed the period length, I will eliminate these.')
-  tspx(tspx>T) = [];
+  cycle_tspx(cycle_tspx>T) = [];
 end
-if numel(tspx)<50
+if numel(cycle_tspx)<50
   disp('Less than 50 spikes provided, significance test may not be robust.')
 end
 %% the works
 % compute phi
-phi = nan(numel(tspx),1);
+phi = nan(numel(cycle_tspx),1);
 for i = 1:numel(phi)
-  phi(i,1) = 2*pi*tspx(i)/T;
+  phi(i,1) = 2*pi*cycle_tspx(i)/T;
 end
 
 % compute vector strength

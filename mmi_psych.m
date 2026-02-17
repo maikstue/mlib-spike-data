@@ -1,5 +1,6 @@
 function [MI,d] = mmi_psych(S1R1,S1R2,S2R1,S2R2)
 % function [MI,d] = mmi_psych(S1R1,S1R2,S2R1,S2R2)
+% 
 % computes mutual information (MI) and sensitivity (d') for behavioral data in a two-stimulus (or two-category), two-choice task
 % 
 % INPUT

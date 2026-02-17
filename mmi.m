@@ -1,6 +1,7 @@
 function [MI,cMI1995,cMI1996] = mmi(s1,s2)
 % function [MI,cMI1995,cMI1996] = mmi(s1,s2)
-% Computes Shannon's mutual information uncorrected (MI) and corrected (cMI) between two spike count distributions from a single neuron.
+% 
+% computes Shannon's mutual information uncorrected (MI) and corrected (cMI) between two spike count distributions from a single neuron.
 % s1 and s2 must be vectors of integers (spikes per trial).
 % 
 % The formula is (according to Arabzadeh et al., J Neurosci 2007):

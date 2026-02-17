@@ -29,12 +29,20 @@ function [auroc,bp,ciLoUp] = mroc(x,y,varargin)
 % ciLoUp    2-element vector holding lower and upper bootstrapped confidence interval limits
 %
 % HISTORY
+% November 2025   moved the if-case for kicking out NaNs to the top to avoid problems with the if-case about integers
 % October 2024    added bootstrapped p-value to output arguments; polished code here and there; added histogram plot
 % October 2021    deleted variable 'resol'
 %                 added automatic conversion of non-integer values into ranks
 % 
 % Maik C. Stüttgen, Oct 2014
 %% check input
+% do we have NaNs? kick them out
+if any(isnan(x)) || any(isnan(y))
+  disp(['[',8,'Kicking out NaNs]',8]) % in orange
+  x(isnan(x)) = [];
+  y(isnan(y)) = [];
+end
+
 % do x and y really hold integers and integers only?
 if (~all(x==int32(x)) || ~all(y==int32(y)) || ~isvector(x) || ~isvector(y))
   disp(['[',8,'Non-integer values provided, converting into ranks]',8]) % in orange
@@ -64,13 +72,6 @@ end
 
 % convert to column vectors
 x = x(:);y = y(:);
-
-% kick out NaNs
-if any(isnan(x)) || any(isnan(y))
-  disp(['[',8,'Kicking out NaNs]',8]) % in orange
-  x(isnan(x)) = [];
-  y(isnan(y)) = [];
-end
 
 %% the works
 start_val = min([x;y])-1;    % overall smallest value -1

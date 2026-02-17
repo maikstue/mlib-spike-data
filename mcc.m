@@ -1,12 +1,12 @@
-function [L_ratio,ID,A,J3,PsF,DBVI] = mcc(X,cid,whichclusters,ts,whichPCs,nocorrs)
-% function [L_ratio,ID,A,J3,PsF,DBVI] = mcc(X,cid,whichclusters,ts,whichPCs,nocorrs)
+function [L_ratio,ID,A,J3,PsF,DBVI] = mcc(waveforms,cid,whichclusters,ts,whichPCs,nocorrs)
+% function [L_ratio,ID,A,J3,PsF,DBVI] = mcc(waveforms,cid,whichclusters,ts,whichPCs,nocorrs)
 % compares two or more spike clusters regarding their separability in terms of J3, PseudoF, Davies-Bouldin validity index (DBVI)
 %
 % INPUT
-% X               X is a matrix in which rows correspond to observations (spikes) and columns are voltage measurements
-%                 mcc performs an input check and will transpose the matrix if size(X,1)<size(X,2)
+% waveforms       a matrix in which rows correspond to observations (spikes) and columns are voltage measurements
+%                 mcc performs an input check and will transpose the matrix if size(waveforms,1)<size(waveforms,2)
 % cid             column vector providing cluster ID for each observation
-%                 numel(cid) should equal size(X,1)
+%                 numel(cid) should equal size(waveforms,1)
 % whichclusters   vector denoting which of the cluster IDs are to be included
 % ts              vector of spike timestamps (optional)
 % whichPCs        scalar/vector to specify which PCs should be included for calculation of L_ratio, ID, and A'
@@ -47,13 +47,13 @@ function [L_ratio,ID,A,J3,PsF,DBVI] = mcc(X,cid,whichclusters,ts,whichPCs,nocorr
 % 
 % Maik C. Stuettgen & Frank Jaekel, February 2016 and January 2020
 %% preps
-if ~isfloat(X),X = double(X);end      % make waveform matrix floating-point
-if size(X,1)<size(X,2),X = X';end     % make sure that rows are spikes and columns are ticks
-if numel(cid)~=size(X,1),error('input error'),end %#ok<ERTAG>   % length(cid) must match size(X,1), the number of spikes
-if isempty(ts),disp('no timestamps provided, substituting...'),nots=1;ts=1:size(X,1);end % function can run with and without time stamps
+if ~isfloat(waveforms),waveforms = double(waveforms);end      % make waveform matrix floating-point
+if size(waveforms,1)<size(waveforms,2),waveforms = waveforms';end     % make sure that rows are spikes and columns are ticks
+if numel(cid)~=size(waveforms,1),error('input error'),end %#ok<ERTAG>   % length(cid) must match size(waveforms,1), the number of spikes
+if isempty(ts),disp('no timestamps provided, substituting...'),nots=1;ts=1:size(waveforms,1);end % function can run with and without time stamps
 
 if ischar(whichPCs) & strcmp(whichPCs,'all')
-  whichPCs = 1:size(X,2);
+  whichPCs = 1:size(waveforms,2);
 elseif ~ischar(whichPCs) & numel(whichPCs)<3
   disp('Input argument whichPCs needs to have at least three entries, substituting with 1:3.')
   whichPCs = 1:3;
@@ -64,7 +64,7 @@ end
 ids = unique(cid);
 if numel(ids)~=numel(whichclusters)
   ids = whichclusters(:);
-  X(~ismember(cid,ids),:) = [];
+  waveforms(~ismember(cid,ids),:) = [];
   ts(~ismember(cid,ids))  = [];
   cid(~ismember(cid,ids)) = [];
 end
@@ -86,7 +86,7 @@ x = 1;
 for i=1:numel(ids),plot(1,0,'Color',colors(i,:));end  % an admittedly inelegant way to make the legend appropriate
 for i=ids'
   n = min([100,sum(cid==i)]);
-  plot(X(randsample(find(cid==i),n),:)','Marker','none','LineStyle','-','Color',colors(x,:));
+  plot(waveforms(randsample(find(cid==i),n),:)','Marker','none','LineStyle','-','Color',colors(x,:));
   x = x+1;
 end
 legend(num2str(ids),'Location','SouthEast')
@@ -94,13 +94,13 @@ axis tight off
 clear i x
 
 %% subplots 332,333: PCA variance explained and PC 1 over time
-[~,score,~,~,explained] = pca(zscore(X));
+[~,score,~,~,explained] = pca(zscore(waveforms));
 % [coeff,score,latent,tsquared,explained,mu] 
 
 subplot(332),title(['PCs 1-3 explain ',num2str(sum(explained(1:3)),'%2.1f'),'% of the variance']),hold on
 bar(explained,'FaceColor','k'),hold on
 plot(cumsum(explained),'r','LineWidth',2)
-axis([0 min([size(X,2),10]),0,80])
+axis([0 min([size(waveforms,2),10]),0,80])
 xlabel('Principal components'),ylabel('Variance explained (%)')
 
 subplot(333),hold on
@@ -427,7 +427,7 @@ function [J3,PsF,DBVI] = getJ3(score,cid,ids)
 % DB reflects the ratio  of  the  sum  of  within-cluster  scatter  to  between-cluster separation, and low values show good isolation.
 
 inputMatrix = score(:,1:2);   % restrict computation of J3 to first two principal components (the more components, the lower J3; see Nicolelis et al.)
-% compute grand centroid (is essentially zero because X has been z-scored)
+% compute grand centroid (is essentially zero because waveforms has been z-scored)
 grandcentroid = mean(inputMatrix);
 
 % compute cluster centroids and J2

@@ -1,22 +1,23 @@
-function waveParms = mwave(meanwave,si,varargin)
-% waveParms = mwave(meanwave,si,varargin)
+function waveparms = mwave(meanwave,fs,varargin)
+% waveparms = mwave(meanwave,fs,varargin)
 %
 % mwave computes full width at half maximum (fwhm) for the largest positive and negative peaks of the waveform
-% as well as peak-to-trough amplitude, duration, and ratio; these five values are put together in row vector 'waveParms' such that
+% as well as peak-to-trough amplitude, duration, and ratio; these five values are put together in row vector 'waveparms' such that
 %
-% waveParms = [fwhmMax,fwhmMin,p2tAmp,p2tDur,p2tRat]
+% waveparms = [fwhmMax,fwhmMin,p2tAmp,p2tDur,p2tRat]
 %
 % ARGUMENTS
 % meanwave    required - vector containing the mean spike waveform
-% si          required - scalar value indicating sampling interval in microseconds
+% fs          required - scalar value indicating the sampling frequency
 %
 % plot        optional - a figure will be created with the mean wave and highlight measurements; should be third input argument
 % handle      optional - to direct the plotting; should be fourth argument and is only valid if the third argument is 'plot'
 %
 % EXAMPLE
-% waveParms = mwave(mean(s(i).spx1ValuesRaw(idx1,:)),10^6*s(i).interval,'plot','handle',h);
+% waveparms = mwave(mean(s(i).spx1ValuesRaw(idx1,:)),10^6*s(i).interval,'plot','handle',h);
 % 
 % HISTORY
+% 2025 June   replaced input 'si' (inter-sample interval in microseconds) with 'fs' (sampling frequency)
 % 2022 April  added optional argument to hand over a figure handle for plotting
 % 2020 Oct    changed interpolation method from 'linear' to 'spline'
 % 2015 Sep    made sure that always five output values are returned
@@ -35,6 +36,7 @@ upsamp   = 10;
 dummy    = interp1(meanwave,linspace(1,length(meanwave),length(meanwave)*upsamp),'spline');
 p2tAmp   = max(dummy)-min(dummy);      % peak-to-trough amplitude
 p2tRat   = abs(max(dummy)/min(dummy)); % peak-to-trough ratio
+si       = 10^6/fs;                    % use fs to calculate the interval between consecutive samples in microseconds
 %% compute full width at half maximum and peak-to-trough duration
 % extract FWHM from upsampled waveform in dummy
 [posPeak,posPeakIdx] = max(dummy);
@@ -56,7 +58,7 @@ if isempty(p2tAmp),p2tAmp=nan;end
 if isempty(p2tDur),p2tDur=nan;end
 if isempty(p2tRat),p2tRat=nan;end
 
-waveParms = [fwhmMax,fwhmMin,p2tAmp,p2tDur,p2tRat];
+waveparms = [fwhmMax,fwhmMin,p2tAmp,p2tDur,p2tRat];
 %% plot if requested
 if nargin>2
   if strcmp(varargin{1},'plot')

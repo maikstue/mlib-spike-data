@@ -1,5 +1,6 @@
 function [cid,avsil] = mcluster(data,z,nclus,whichPCs,cType,whichDist,metric,T,plotting)
 % function [cid,avsil] = mcluster(data,z,nclus,whichPCs,cType,whichDist,metric,T,plotting)
+% 
 % performs clustering on a data matrix after running PCA and returns cluster codes cid and average silhouette values
 % 
 % mcluster will rearrange clusters such that cluster 1 has the most elements, cluster 2 the second most etc.

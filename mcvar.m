@@ -1,5 +1,6 @@
 function cv = mcvar(x,mode)
 % function cv = mcvar(x,mode)
+% 
 % computes the coefficient of variation cv for vector x
 % 
 % INPUT

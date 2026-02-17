@@ -1,6 +1,7 @@
 function [score,loadings] = mdimreduct(smat4dimred,standardize,plotresults)
-% function [score,loadings] = mdimreduct(smat4dimred,standardize,plotresults);
-% Dimensionality reduction of a spike-count matrix via PCA.
+% function [score,loadings] = mdimreduct(smat4dimred,standardize,plotresults)
+% 
+% Performs dimensionality reduction of a spike-count matrix via PCA.
 % 
 % INPUT
 % smat4dimred   data matrix where rows are "variables" and columns are "observations"
